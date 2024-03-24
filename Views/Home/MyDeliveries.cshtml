@@ -1,0 +1,84 @@
+﻿@{
+    ViewData["Title"] = "Мои заказы";
+    Layout = "_Layout";
+    @model IEnumerable<Paq.Models.MyDelivery>;
+}
+<div align="center" class="Main_information" style="margin-bottom: 20px;">
+    @if (User.Identity.IsAuthenticated)
+    {
+        @if (Model != null)
+        {
+            if (Model.Count() > 0)
+            {
+                foreach (var result in Model)
+                {
+                    <div align="justify" style="display: inline-block; width: 500px; background-color:indianred">
+                    @for (int i = 0; i < result.colorDeliveries.Count(); i++)
+                    {
+                        <img style="width:490px" src="data:image;base64,@System.Convert.ToBase64String(result.colorDeliveries[i].Colors.Photo)">
+                        <h3>@result.colorDeliveries[i].Colors.RalCatalog.NameRal</h3>
+                        <h4>@result.colorDeliveries[i].Quantity КГ</h4>
+                    }
+                    <h1>Цена заказа: @result.delivery.PriceAll руб.</h1>
+                    <h3>Статус заказа: @result.delivery.StatusDeliveres.NameStatusOrder</h3>
+                    @if (result.delivery.StatusDeliveres.IdStatusOrder == 10)
+                        {
+                            <script src="https://3dsec.sberbank.ru/payment/docsite/assets/js/ipay.js"></script>
+                            <script>
+                                var ipay = new IPAY({ api_token: 'YRF3C5RFICWISEWFR6GJ' });
+
+                                function handlePayment(button) {
+                                    var price = button.dataset.price;
+                                    var form = button.parentNode.querySelector('form');
+                                    var deliveryId = button.dataset.deliveryid;
+                                    var address = button.dataset.address;
+                                    var salt = button.dataset.salt;
+                                    var cityId = button.dataset.cityid;
+                                    var userId = button.dataset.userid;
+
+                                    form.querySelector('input[name="IdDelivery"]').value = deliveryId;
+                                    form.querySelector('input[name="Adress"]').value = address;
+                                    form.querySelector('input[name="Salt"]').value = salt;
+                                    form.querySelector('input[name="CityId"]').value = cityId;
+                                    form.querySelector('input[name="UserId"]').value = userId;
+                                    ipayCheckout({
+                                        amount: price,
+                                        currency: 'RUB',
+                                        order_number: '',
+                                        description: ''
+                                    },
+                                    function (order) { form.submit() },
+                                    function (order) { form.submit() });
+                                }
+                            </script>
+                            <button class="More" onclick="handlePayment(this)" data-price="@result.delivery.PriceAll" data-deliveryid="@result.delivery.IdDelivery" data-address="@result.delivery.Adress" data-salt="@result.delivery.Salt" data-cityid="@result.delivery.CityId" data-userid="@result.delivery.UserId">
+                                Купить
+                            </button>
+                            <form asp-action="MyDeliveryUpdate" method="get">
+                                <input name="IdDelivery" value="" type="hidden" />
+                                <input name="Adress" value="" type="hidden" />
+                                <input name="Salt" value="" type="hidden" />
+                                <input name="CityId" value="" type="hidden" />
+                                <input name="StatusOrderId" value="11" type="hidden" />
+                                <input name="UserId" value="" type="hidden" />
+                            </form>
+                        }
+                    </div>
+                    <div style="clear: both;"></div>
+                }
+            }
+            else
+            {
+                <h1>Пусто</h1>
+            }
+        }
+        else
+        {
+            <h1>Ничего не найдено</h1>
+        }
+    }
+    else
+    {
+        <h1>Сначала зайдите в аккаунт</h1>
+    }
+</div>

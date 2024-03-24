@@ -1,0 +1,166 @@
+﻿@model Paq.Models.User
+@{
+    ViewData["Title"] = "Регистрация";
+    Layout = "_Layout";
+}
+
+<form asp-action="Register" class="CallBackForm" method="post">
+    <div>
+        <label for="Login">Логин:</label>
+        <input type="text" id="Login" name="Login" class="field" placeholder="MegaLogin123">
+    </div>
+    <div>
+        <label for="Password">Пароль:</label>
+        <input type="Password" id="Password" name="Password" class="field" placeholder="Pa$$w0rd">
+    </div>
+    <div>
+        <label for="Name">Имя:</label>
+        <input type="text" id="Name" name="Name" class="field" placeholder="Иван">
+    </div>
+    <div>
+        <label for="Surname">Фамилия:</label>
+        <input type="text" id="Surname" name="Surname" class="field" placeholder="Иванов">
+    </div>
+    <div>
+        <label for="Patromymic">Отчество:</label>
+        <input type="text" id="Patromymic" name="Patromymic" class="field" placeholder="Иванович">
+    </div>
+    <div>
+        <label for="EMail">E-mail:</label>
+        <input type="text" id="EMail" name="EMail" class="EMail" placeholder="a@mail.ru">
+    </div>
+    <div>
+        <label for="NumberTelephone">Номер телефона:</label>
+        <input type="text" id="NumberTelephone" name="NumberTelephone" class="NumberTelephone" placeholder="+7(900) 000-00-00">
+    </div>
+    <div>
+        <label for="captcha">Решите простое математическое уравнение:</label>
+        <div id="captcha_question"></div>
+        <input type="text" id="captcha" name="captcha" required>
+    </div>
+    <p></p>
+    <button type="submit" name="But">Зарегистрироваться</button>
+    <script>
+        var validateBtn = document.querySelector('.CallBackForm .But')
+        var form = document.querySelector('.CallBackForm')
+        var validateBtn = form.querySelector('.But')
+        var fields = form.querySelectorAll('.field')
+        var NumberTelephone = form.querySelector('.NumberTelephone')
+        var EMail = form.querySelector('.EMail')
+        var TorFAllErrors = false
+        var TorFNumber = false
+        var TorFEmail = false
+
+        var removeValidation = function () {
+            var errors = form.querySelectorAll('.error')
+
+            for (var i = 0; i < errors.length; i++) {
+                errors[i].remove()
+            }
+        }
+
+        form.addEventListener('submit', function (event) {
+            event.preventDefault()
+
+            removeValidation()
+
+            allErrors()
+
+            checkNumber()
+
+            checkEmail()
+
+            if (TorFAllErrors && TorFNumber && TorFEmail) {
+                document.forms[0].submit();
+            }
+
+            if (TorFAllErrors && TorFNumber && TorFEmail) {
+                form.appendChild(hiddenInput);
+
+                document.forms[0].submit();
+            }
+        })
+
+        var checkNumber = function () {
+            if (NumberTelephone.value.indexOf("+") == -1) {
+                var error = generateError('Номер должен соответствовать примеру')
+                NumberTelephone.parentElement.insertBefore(error, NumberTelephone)
+                TorFNumber = false
+            }
+            else if (NumberTelephone.value.indexOf("(") == -1) {
+                var error = generateError('Номер должен соответствовать примеру')
+                NumberTelephone.parentElement.insertBefore(error, NumberTelephone)
+                TorFNumber = false
+            }
+            else if (NumberTelephone.value.indexOf(")") == -1) {
+                var error = generateError('Номер должен соответствовать примеру')
+                NumberTelephone.parentElement.insertBefore(error, NumberTelephone)
+                TorFNumber = false
+            }
+            else if (NumberTelephone.value.indexOf("-") == -1) {
+                var error = generateError('Номер должен соответствовать примеру')
+                NumberTelephone.parentElement.insertBefore(error, NumberTelephone)
+                TorFNumber = false
+            }
+            else {
+                TorFNumber = true
+            }
+        }
+
+        var checkEmail = function () {
+            if (EMail.value.indexOf("\u0040") == -1) {
+                var error = generateError('E-mail должен соответствовать примеру')
+                EMail.parentElement.insertBefore(error, EMail)
+                TorFEmail = false
+            }
+            else if (EMail.value.indexOf(".") == -1) {
+                var error = generateError('E-mail должен соответствовать примеру')
+                EMail.parentElement.insertBefore(error, EMail)
+                TorFEmail = false
+            }
+            else {
+                TorFEmail = true
+            }
+        }
+
+        var checkLogin = function () {
+            if (Login.value.indexOf("\u0040") == -1) {
+                var error = generateError('Логин должен быть больше или равен 8-ми символам')
+                Login.parentElement.insertBefore(error, Login)
+                TorFLogin = false
+            }
+            else {
+                TorFLogin = true
+            }
+        }
+
+        var allErrors = function () {
+            for (var i = 0; i < fields.length; i++) {
+                if (!fields[i].value) {
+                    var error = generateError('Поле не должно быть пустым')
+                    form[i].parentElement.insertBefore(error, fields[i])
+                }
+            }
+
+            for (var i = 0; i < fields.length; i++) {
+                if (!fields[i].value) {
+                    TorFAllErrors = false
+                    break
+                }
+                else {
+                    TorFAllErrors = true
+                }
+            }
+        }
+
+        var generateError = function (text) {
+            var error = document.createElement('div')
+            error.className = 'error'
+            error.style.color = 'red'
+            error.innerHTML = text
+            return error
+        }
+    </script>
+    <p></p>
+    <a asp-controller="Account" asp-action="Account">Есть аккаунта?</a>
+</form>

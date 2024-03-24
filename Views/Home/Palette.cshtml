@@ -1,0 +1,80 @@
+﻿@{
+    ViewData["Title"] = "RAL палитра";
+    Layout = "_Layout";
+    @model IEnumerable<Paq.Models.RalCatalog>;
+}
+
+<div class="Main_information">
+    <div class="container">
+        <div id="myCarousel" class="carousel slide">
+            <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    <div class="carousel-content">
+                        <div class="It" style="margin: 0 auto;">
+                            <h3>ПАЛИТРА RAL</h3>
+                            <p>
+                                <div style="width: calc(100px + (700 - 100) * ((120vw - 500px) / (1920 - 500))); height: 400px;"></div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                @foreach (var result in Model)
+                {
+                <div class="item">
+                    <div class="carousel-content">
+                        <div style="margin: 0 auto">
+                            <h3>@result.ColorRal</h3>
+                            <p>
+                                <div style="width: calc(100px + (700 - 100) * ((120vw - 500px) / (1920 - 500))); height: 400px; background-color: @result.ColorHtml"></div>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                }
+            </div>
+            <a class="carousel-left" href="#myCarousel" role="button" data-slide="prev">
+                <span class="glyphicon glyphicon-chevron-left"></span>
+            </a>
+            <a class="carousel-right" href="#myCarousel" role="button" data-slide="next">
+                <span class="glyphicon glyphicon-chevron-right"></span>
+            </a>
+        </div>
+    </div>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style type="text/css">
+        .carousel-inner {
+            width: auto;
+            height: 400px;
+        }
+
+        .carousel-content {
+            color: black;
+            display: flex;
+            text-align: center;
+        }
+
+        .carousel-left {
+            color: black;
+            text-decoration: none;
+            margin: auto;
+            text-align: center;
+            display: inline-grid;
+        }
+
+        .carousel-right {
+            color: black;
+            text-decoration: none;
+            margin: auto;
+            text-align: center;
+            display: inline-grid;
+        }
+    </style>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.carousel').carousel();
+        });
+    </script>
+</div>

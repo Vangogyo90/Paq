@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Новости";
+    Layout = "_Layout";
+    @model Paq.Models.NewsPhoto;
+}
+<div class="Main_information">
+<div class="slider-container">
+    <div class="slider">
+        @foreach (var photo in Model.PhotoNews)
+        {
+                <div class="slide">
+                    <img src="data:image;base64,@System.Convert.ToBase64String(photo.Photo)" style="max-width:500px; max-height:600px; text-align:center;">
+                </div>
+        }
+    </div>
+    <p style="white-space: pre-wrap;">@System.Text.Encoding.UTF8.GetString(Model.News.TextNews)</p>
+    @if (Model.PhotoNews.Count() > 1)
+    {
+        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+    }
+</div>
+</div>
+
+<style>
+    .slider-container {
+        position: relative;
+        max-width: 1000px;
+        margin: 0 auto;
+        overflow: hidden;
+        text-align: center;
+    }
+    .slider {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+    .slide {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+    img {
+        width: 100%;
+        height: auto;
+    }
+    .prev, .next {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background-color: rgba(0, 0, 0, 0.5);
+        color: white;
+        border: none;
+        cursor: pointer;
+        padding: 10px;
+        z-index: 1;
+    }
+    .prev {
+        left: 0;
+    }
+    .next {
+        right: 0;
+    }
+</style>
+
+<script>
+    let slideIndex = 0;
+    let slides = document.getElementsByClassName("slide");
+
+    function moveSlide(n) {
+        slideIndex += n;
+        if (slideIndex >= slides.length) { slideIndex = 0 }
+        if (slideIndex < 0) { slideIndex = slides.length - 1 }
+        showSlides();
+    }
+
+    function showSlides() {
+        let slideWidth = slides[0].offsetWidth;
+        let transformValue = -slideIndex * slideWidth + "px";
+        document.querySelector(".slider").style.transform = "translateX(" + transformValue + ")";
+    }
+</script>
+

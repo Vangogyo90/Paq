@@ -1,0 +1,160 @@
+﻿@model Paq.Models.FeedBack
+@{
+    ViewData["Title"] = "Графа обратной связи";
+    Layout = "_Layout";
+}
+
+<form asp-action="CallBack" class="CallBackForm" method="post">
+    <div>
+        <label for="NameUser">ФИО</label>
+        <input name="NameUser" class="field" placeholder="Иванов Иван Иванович"/>
+    </div>
+    <div>
+        <label for="Message">Сообщение</label>
+        <textarea rows="10" cols="30" name="Message" class="field" style="min-height: 100px; max-height:300px; min-width: 400px; max-width:400px;"></textarea>
+    </div>
+    <div>
+        <label for="WhatIs">Выберите способ ответа:</label>
+        <select id="WhatIs" name="WhatIs" style="width: 400px;">
+            <option value="Номер телефона">Номер телефона</option>
+            <option value="E-mail">E-mail</option>
+        </select>
+    </div>
+    <div>
+        <label for="Number_Or_E_mail" id="contactLabel">Контактный телефон</label>
+        <input name="Number_Or_E_mail" class="Number_Or_E_mail" placeholder="+7(900) 000-00-00" />
+    </div>
+    <div>
+        <label for="Category">Выберите категорию:</label>
+        <select id="Category" name="Category" style="width: 400px;">
+            <option value="Вопрос">Вопрос</option>
+            <option value="Предложение">Предложение</option>
+            <option value="Жалоба">Жалоба</option>
+            <option value="Отзыв">Отзыв</option>
+        </select>
+    </div>
+    <div>
+        <label for="captcha">Решите простое математическое уравнение:</label>
+        <div id="captcha_question"></div>
+        <input type="text" id="captcha" name="captcha" required>
+    </div>
+    <div>
+        <button type="submit" name="But">Оставить заявку</button>
+        <script>
+            var contactLabel = document.getElementById('contactLabel');
+            var contactInput = document.querySelector('.Number_Or_E_mail');
+
+            document.getElementById('WhatIs').addEventListener('change', function () {
+                if (this.value === 'E-mail') {
+                    contactLabel.textContent = 'E-mail';
+                    contactInput.placeholder = 'example@example.com';
+                    contactInput.value = '';
+                } else if (this.value === 'Номер телефона') {
+                    contactLabel.textContent = 'Контактный телефон';
+                    contactInput.placeholder = '+7(900) 000-00-00';
+                    contactInput.value = '';
+                }
+            });
+        </script>
+        <script>
+            var validateBtn = document.querySelector('.CallBackForm .But')
+            var form = document.querySelector('.CallBackForm')
+            var validateBtn = form.querySelector('.But')
+            var fields = form.querySelectorAll('.field')
+            var NumberTelephone = form.querySelector('.Number_Or_E_mail')
+            var TorFAllErrors = false
+            var TorFContact = false
+
+            var removeValidation = function () {
+                var errors = form.querySelectorAll('.error')
+
+                for (var i = 0; i < errors.length; i++) {
+                    errors[i].remove()
+                }
+            }
+
+            form.addEventListener('submit', function (event) {
+                event.preventDefault()
+
+                removeValidation()
+
+                allErrors()
+
+                checkContact()
+
+                if (TorFAllErrors && TorFContact) {
+                   document.forms[0].submit();
+                }
+
+                if (TorFAllErrors && TorFContact) {
+                    var messageInput = form.querySelector('.field[name="Message"]');
+                    var message = messageInput.value;
+                    var encoder = new TextEncoder();
+                    var messageBytes = encoder.encode(message);
+
+                    var hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'MessageBytes';
+                    hiddenInput.value = Array.from(messageBytes).join(',');
+
+                    form.appendChild(hiddenInput);
+
+                    document.forms[0].submit();
+                }
+            })
+
+        var checkContact = function () {
+            var contactType = document.getElementById('WhatIs').value;
+
+            if (contactType === 'Номер телефона') {
+                if (contactInput.value.indexOf('+') === -1 ||
+                    contactInput.value.indexOf('(') === -1 ||
+                    contactInput.value.indexOf(')') === -1 ||
+                    contactInput.value.indexOf('-') === -1) {
+                    var error = generateError('Номер должен соответствовать примеру');
+                    contactInput.parentElement.insertBefore(error, contactInput);
+                    TorFContact = false;
+                } else {
+                    TorFContact = true;
+                }
+            } 
+            else if (contactType === 'E-mail') {
+                if (contactInput.value.indexOf('.') === -1) {
+                    var error = generateError('E-mail должен быть валидным');
+                    contactInput.parentElement.insertBefore(error, contactInput);
+                    TorFContact = false;
+                } else {
+                    TorFContact = true;
+                }
+            }
+        };
+
+            var allErrors = function(){
+                for (var i = 0; i < fields.length; i++) {
+                    if (!fields[i].value) {
+                        var error = generateError('Поле не должно быть пустым')
+                        form[i].parentElement.insertBefore(error, fields[i])
+                    }
+                }
+
+                for (var i = 0; i < fields.length; i++) {
+                    if (!fields[i].value) {
+                        TorFAllErrors = false
+                        break
+                    }
+                    else{
+                        TorFAllErrors = true
+                    }
+                }
+            }
+
+            var generateError = function (text) {
+                var error = document.createElement('div')
+                error.className = 'error'
+                error.style.color = 'red'
+                error.innerHTML = text
+                return error
+            }
+        </script>
+    </div>
+</form>

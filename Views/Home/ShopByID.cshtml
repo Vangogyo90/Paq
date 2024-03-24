@@ -1,0 +1,21 @@
+﻿@{
+    ViewData["Title"] = "Магазин";
+    Layout = "_Layout";
+    @model Paq.Models.QuantityColor;
+}
+
+<div align="center" class="Main_information" style="margin-bottom: 20px;">
+     <div align="justify" style="display: inline-block; width: 800px;">
+                    <img style="width:800px" src="data:image;base64, @System.Convert.ToBase64String(Model.Colors.Photo)">
+                    <h3>@Model.Colors.RalCatalog.NameRal || @Model.Price_For_KG руб. за КГ</h3>
+                    <h1>Характеристики:</h1>
+                    <h4>Ral-название:@Model.Colors.RalCatalog.ColorRal</h4>
+                    <h4>Степень блеска: @Model.Colors.Shines.NameShine</h4>
+                    <h4>Тип применения: @Model.Colors.TypeApplications.NameTypeApplication</h4>
+                    <h4>Пульверизация: @Model.Colors.TempPulverizations.Degree C / @Model.Colors.TempPulverizations.Time</h4>
+                    <h4>Тип поверхности: @Model.Colors.TypeSurfaces.NameTypeSurface</h4>
+                    <h4>Склад: @Model.WareHouses.Adress @Model.WareHouses.City.NameCity</h4>
+                    <h4>Количество на складе: @Model.Quantity КГ</h4>
+                    <a href="@Url.Action("PDFShop", "Home", new { id = @Model.ColorId })"><button class="More">Сертификат краски</button></a>
+        </div>
+</div>

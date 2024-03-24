@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" type="text/css" media="screen" runat="server" href="~/css/MainCSS.css?Version=3">
+    <link rel="stylesheet" href="~/css/FormCss.css">
+    <link rel="icon" type="~/image/png" href="~/Logos/logo-without-neon.png">
+    <script>
+        function generateCaptchaQuestion() {
+            var num1 = Math.floor(Math.random() * 10) + 1;
+            var num2 = Math.floor(Math.random() * 10) + 1;
+            var operator = ['+', '-', '*'][Math.floor(Math.random() * 3)];
+
+            return num1 + ' ' + operator + ' ' + num2;
+        }
+        window.onload = function () {
+            document.getElementById('captcha_question').textContent = generateCaptchaQuestion();
+        };
+
+        document.getElementById('captcha_question').addEventListener('click', function () {
+            document.getElementById('captcha_question').textContent = generateCaptchaQuestion();
+        });
+
+        document.querySelector('.CallBackForm').addEventListener('submit', function (event) {
+            var captchaInput = document.getElementById('captcha').value;
+            var captchaQuestion = document.getElementById('captcha_question').textContent;
+            var answer = eval(captchaQuestion); 
+
+            if (parseInt(captchaInput) !== answer) {
+                event.preventDefault();
+                alert('Неверный ответ на CAPTCHA. Попробуйте еще раз.');
+                document.getElementById('captcha').value = '';
+                document.getElementById('captcha_question').textContent = generateCaptchaQuestion();
+            }
+        });
+    </script>
+</head>
+<body>
+    <header>
+        <div>
+
+            <ul class="Nav">
+                <li class="Main_Image"><a asp-controller="Home" asp-action="Index"><img style="width: 100px;" src="~/Logos/logo-header.png"></a></li>
+                <li><a asp-controller="Home" asp-action="Paint">О краске</a></li>
+                <li><a asp-controller="Home" asp-action="News">Новости</a></li>
+                <li><a asp-controller="Home" asp-action="Palette">Палитра RAL</a></li>
+                <li><a asp-controller="Home" asp-action="Laborathory">Лаборатория</a></li>
+                <li><a asp-controller="Home" asp-action="Production">Производство</a></li>
+                <li><a href="@Url.Action("Stocks", "Home", new { pageCount = 1 })">Акции</a></li>
+                <li><a href="@Url.Action("Shop", "Home", new { pageCount = 1 })">Магазин</a></li>
+                <li>
+                    <ul class="Nav_in">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <li class="icon" style="padding-left:100px;"><a asp-controller="Account" asp-action="Logout"><img style="width: 30px;" src="~/Photos/exit.png"></a></li>
+                            <li><a asp-controller="Home" asp-action="MyDeliveries">Мои доставки</a></li>
+                        }
+                        else
+                        {
+                            <li class="icon" style="padding-left:100px;"><a asp-controller="Account" asp-action="Account"><img style="width: 30px;" src="~/Photos/account.png"></a></li>
+                        }
+                        <li class="icon"><a asp-controller="Home" asp-action="Cart"><img style="width: 30px;" src="~/Photos/cart.png"></a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="Footer">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+            <div class="Footer_Part">
+                <h4>О компании</h4>
+                <ul class="Footer_UL">
+                    <li><a asp-controller="Home" asp-action="Index">Главная</a></li>
+                    <li><a asp-controller="Home" asp-action="Laborathory">Лаборатория</a></li>
+                    <li><a asp-controller="Home" asp-action="Production">Производство</a></li>
+                </ul>
+            </div>
+            <div class="Footer_Part">
+                <h4>Продукция</h4>
+                <ul class="Footer_UL">
+                    <li><a asp-controller="Home" asp-action="Paint">Краска</a></li>
+                    <li><a asp-controller="Home" asp-action="Paint">Эпоксидная</a></li>
+                    <li><a asp-controller="Home" asp-action="Paint">Полиэфирная</a></li>
+                    <li><a asp-controller="Home" asp-action="Paint">Полиуретановая</a></li>
+                    <li><a asp-controller="Home" asp-action="Paint">Эпоксидно-полиэфирная</a></li>
+                </ul>
+            </div>
+            <div class="Footer_Part">
+                <h4>Помощь</h4>
+                <ul class="Footer_UL">
+                    <li><a href="tel:+7(495) 790-20-29">+7(495) 790-20-29</a></li>
+                    <li><a href="mailto:neon@neon12.ru">neon@neon12.ru</a></li>
+                    <li><a asp-controller="Home" asp-action="CallBack">Графа обратной связи</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

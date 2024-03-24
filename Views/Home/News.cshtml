@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Новости";
+    Layout = "_Layout";
+    @model IEnumerable<Paq.Models.News>;
+}
+<div align="center" class="Main_information" style="margin-bottom: 20px;">
+    @if (Model != null)
+    {
+        foreach (var result in Model)
+        {
+            <div align="justify" style="width: 300px;">
+                <h3>@result.HeadingNews</h3>
+                <h3>@result.Date</h3>
+                <a href="@Url.Action("NewsByID", "Home", new { id = result.IdNews })"><button class="More">Подробнее</button></a>
+            </div>
+        }
+    }
+    else
+    {
+        <h1>Ничего не найдено</h1>
+    }
+</div>

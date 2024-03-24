@@ -1,0 +1,8 @@
+C:\Users\ameln\Documents\ПП 3 курс\Проект\Сайт\Paq\Paq\publish\Paq.exe
+C:\Users\ameln\Documents\ПП 3 курс\Проект\Сайт\Paq\Paq\publish\appsettings.Development.json
+C:\Users\ameln\Documents\ПП 3 курс\Проект\Сайт\Paq\Paq\publish\appsettings.json
+C:\Users\ameln\Documents\ПП 3 курс\Проект\Сайт\Paq\Paq\publish\Paq.dll
+C:\Users\ameln\Documents\ПП 3 курс\Проект\Сайт\Paq\Paq\publish\Paq.deps.json
+C:\Users\ameln\Documents\ПП 3 курс\Проект\Сайт\Paq\Paq\publish\Paq.runtimeconfig.json
+C:\Users\ameln\Documents\ПП 3 курс\Проект\Сайт\Paq\Paq\publish\Paq.pdb
+C:\Users\ameln\Documents\ПП 3 курс\Проект\Сайт\Paq\Paq\publish\Newtonsoft.Json.dll

@@ -1,0 +1,25 @@
+﻿@model LoginViewModel
+@{
+    ViewData["Title"] = "Авторизация";
+    Layout = "_Layout";
+}
+
+<form method="post"class="CallBackForm">
+    <div>
+        <label for="username">Логин:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+    <div>
+        <label for="password">Пароль:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <div>
+        <label for="captcha">Решите простое математическое уравнение:</label>
+        <div id="captcha_question"></div>
+        <input type="text" id="captcha" name="captcha" required>
+    </div>
+    <input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+    <button type="submit">Войти</button>
+    <p></p>
+    <a asp-controller="Account" asp-action="Register">Нет аккаунта?</a>
+</form>

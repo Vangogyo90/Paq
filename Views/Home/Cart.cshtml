@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Корзина";
+    Layout = "_Layout";
+    @model IEnumerable<Paq.Models.ColorsInDelivery>;
+    @using System.Security.Claims;
+}
+<div align="center" class="Main_information" style="margin-bottom: 20px;">
+    @if (Model != null)
+    {
+        @if (Model.Count() > 0)
+        {
+            @foreach (var result in Model)
+            {
+                <div align="justify" style="display: inline-block; width: 300px;">
+                    <img style="width:300px" src="data:image;base64,@System.Convert.ToBase64String(result.Color.Colors.Photo)">
+                    <h3>@result.Color.Colors.RalCatalog.NameRal</h3>
+                    <h4>@result.Color.Price_For_KG руб. за КГ</h4>
+                    <h4>@result.Quantity КГ</h4>
+                    <h4>@(result.Color.Price_For_KG * result.Quantity) руб.</h4>
+                    @if (result.Discount.SizeDicsount > 0)
+                    {
+                        <h3>СКИДКА @result.Discount.SizeDicsount %</h3>
+                        <h4>@(result.Quantity * Math.Round((result.Color.Price_For_KG - (result.Color.Price_For_KG / 100) * result.Discount.SizeDicsount))) руб. за КГ</h4>
+                    }
+                    <p>@result.Color.Colors.RalCatalog.ColorRal</p>
+                    <p>@result.Color.Colors.Shines.NameShine</p>
+                    <p>
+                        <a href="@Url.Action("ShopByID", "Home", new { id = @result.Color.IdQuantityColors })"><button class="More">Подробнее</button></a>
+                    </p>
+                </div>
+                <form action="/Home/RemoveFromCartNotAll" method="post">
+                    <input type="hidden" name="quantityid" value="@result.Color.IdQuantityColors">
+                    <input name="quantityToRemove" placeholder="КГ" min="0" type="number" style="width: 40px;">
+                    <button type="submit" class="More">Удалить из корзины</button>
+                </form>
+            }
+            <div style="clear: both;"></div>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form class="CallBackForm" action="/Home/Cart" method="post">
+                    <div>
+                        <label for="CityId">Выберите город:</label>
+                        <select id="CityId" name="CityId" style="width: 400px;">
+                            @foreach (var city in ViewBag.Cities)
+                            {
+                                <option value="@city.IdCity">@city.NameCity</option>
+                            }
+                        </select>
+                    </div>
+                    <label for="Adress">Адрес:</label>
+                    <input name="Adress" placeholder="Адрес" required>
+                    <input type="hidden" name="UserId" value="@User.Identity.Name">
+                    <input type="hidden" name="StatusOrderId" value="10">
+                    <button class="More">Оформить заказ</button>
+                </form>
+            }
+        }
+        else
+        {
+            <h1>Заказ пуст</h1>
+        }
+    }
+    else
+    {
+        <h1>Заказ пуст</h1>
+    }
+</div>

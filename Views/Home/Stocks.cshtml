@@ -1,0 +1,68 @@
+﻿@{
+    ViewData["Title"] = "Магазин";
+    Layout = "_Layout";
+    @model Paq.Models.Pagination;
+}
+<div align="center" class="Main_information" style="margin-bottom: 20px;">
+    <div class="search-container" style="display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; width:auto;">
+        <form class="search" action="/Home/SearchStocks" method="GET">
+            <input class="search" type="text" name="query" placeholder="Введите ваш поисковый запрос" required>
+            <button class="search" type="submit"><i class="fa fa-search"></i>Найти</button>
+        </form>
+        <form class="emoji" action="/Home/UpPriceStocks" method="GET">
+            <button class="More" type="submit" style="font-size: 30px;">⬆️</button>
+        </form>
+        <form class="emoji" action="/Home/DownPriceStocks" method="GET">
+            <button class="More" type="submit" style="font-size: 30px;">⬇️</button>
+        </form>
+    </div>
+    @if (Model != null)
+    {
+        if (Model.QuantityColor.Count() > 0)
+        {
+            for (int i = 0; i < Model.QuantityColor.Count(); i++)
+            {
+                <div align="justify" style="display: inline-block; width: 300px;">
+                    <img style="width:300px" src="data:image;base64,@System.Convert.ToBase64String(@Model.QuantityColor[i].Colors.Photo)">
+                    <h3>@Model.QuantityColor[i].Colors.RalCatalog.NameRal</h3>
+                    <h4>@Model.QuantityColor[i].Price_For_KG руб. за КГ</h4>
+                    @if (Model.Discounts[i] != null)
+                    {
+                        <h3>СКИДКА @Model.Discounts[i].SizeDicsount %</h3>
+                        <h4>@(
+                                        Math.Round((Model.QuantityColor[i].Price_For_KG - (Model.QuantityColor[i].Price_For_KG / 100) * Model.Discounts[i].SizeDicsount))
+                                        ) руб. за КГ</h4>
+                    }
+                    <p>@Model.QuantityColor[i].Colors.RalCatalog.ColorRal</p>
+                    <p>@Model.QuantityColor[i].Colors.Shines.NameShine</p>
+                    <p>
+                        <a href="@Url.Action("ShopByID", "Home", new { id = @Model.QuantityColor[i].IdQuantityColors })"><button class="More">Подробнее</button></a>
+                    </p>
+                    <form action="/Home/AddStocksCart" method="post">
+                        <input type="hidden" name="quantityid" value="@Model.QuantityColor[i].IdQuantityColors">
+                        <input name="quantity" placeholder="КГ" min="0" max="10000" type="number" style="width: 40px;">
+                        <input name="pageCount" type="hidden" value="@Model.PageNumber">
+                        <button type="submit" class="More">Добавить в корзину</button>
+                    </form>
+                </div>
+            }
+        }
+        else
+        {
+            <h1>Пусто</h1>
+        }
+
+        <div style="clear: both;"></div>
+
+        for (int i = 1; i < Model.TotalPages+1; i++)
+        {
+            <div align="justify" style="display: inline-block; margin: 0; padding: 5px;">
+                <a href="@Url.Action("Shop", "Home", new { pageCount = i })"><button class="More">@i</button></a>
+            </div>
+        }
+    }
+    else
+    {
+        <h1>Ничего не найдено</h1>
+    }
+</div>
